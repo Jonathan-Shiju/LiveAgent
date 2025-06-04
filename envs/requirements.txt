@@ -1,0 +1,3 @@
+sounddevice
+python-dotenv
+numpy
