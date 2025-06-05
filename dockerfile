@@ -1,9 +1,10 @@
 FROM jonathanshiju/runpod-runtime:latest
 
-RUN pip install numpy \
-    sounddevice
-
 WORKDIR /workspace
+
+RUN sudo apt update && \
+    apt-get install --yes --no-install-recommends \
+    portaudio19-dev
 
 RUN git clone https://github.com/Jonathan-Shiju/LiveAgent.git
 
