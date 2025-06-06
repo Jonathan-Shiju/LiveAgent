@@ -2,7 +2,7 @@ FROM jonathanshiju/runpod-runtime:latest
 
 WORKDIR /workspace
 
-RUN sudo apt update && \
+RUN apt update && \
     apt-get install --yes --no-install-recommends \
     portaudio19-dev
 
