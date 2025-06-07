@@ -41,6 +41,7 @@ class ASRStreaming:
 
         # Initialize VAC if enabled
         if enable_vac:
+            asr.use_vad()
             self.online = VACOnlineASRProcessor(
                 online_chunk_size=min_chunk_size,
                 asr=asr
@@ -87,6 +88,7 @@ class ASRStreaming:
 
         self.logger.info("Processing in simultaneous mode...")
 
+        last_printed_end = None
         try:
             while True:
                 now = time.time() - self.start_time
@@ -100,6 +102,8 @@ class ASRStreaming:
                 try:
                     result = self.online.process_iter()
                     self.output_transcript(result)
+                    if result is not None:
+                        last_printed_end = result[1]
                 except AssertionError as e:
                     self.logger.error(f"Assertion error: {e}")
 
@@ -108,10 +112,13 @@ class ASRStreaming:
 
                 if end >= duration:
                     break
+            now = None
 
             # Process final chunk
             result = self.online.finish()
-            self.output_transcript(result)
+            # Only output if the result's start time is after the last printed end time
+            if result is not None and (last_printed_end is None or result[0] > last_printed_end):
+                self.output_transcript(result, now=now)
 
         except KeyboardInterrupt:
             self.logger.info('Keyboard interrupt detected. Stopping...')
@@ -126,7 +133,7 @@ class ASRStreaming:
         if now is None and self.start_time:
             now = time.time() - self.start_time
 
-        if result and result[2]:  # Check if result has transcription text
+        if result:  # Check if result has transcription text
             beg_ts, end_ts, text = result
             if beg_ts is not None:
                 timestamp_line = f"{now*1000:.4f} {beg_ts*1000:.0f} {end_ts*1000:.0f} {text}"
