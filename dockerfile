@@ -1,4 +1,4 @@
-FROM jonathanshiju/runpod-runtime:latest
+FROM jonathanshiju/runpod-devel:latest
 
 WORKDIR /workspace
 

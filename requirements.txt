@@ -4,3 +4,4 @@ librosa
 soundfile
 silero-vad
 faster-whisper
+python-dotenv

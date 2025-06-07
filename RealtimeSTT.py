@@ -6,8 +6,8 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv('envs/dev.env')
-model_path = os.getenv('MODEL_PATH')
-warmup_file_path = os.getenv('WARMUPFILE')
+model_path = os.getenv('model_path')
+warmup_file_path = os.getenv('warmupfile')
 
 class ASRStreaming:
     def __init__(self,
@@ -137,9 +137,8 @@ class ASRStreaming:
 # Simple usage example
 if __name__ == "__main__":
     asr = ASRStreaming(
-        audio_path="/path/to/audio.wav",
+        audio_path="test.wav",
         model="large-v3",
-        language="en"
     )
     transcription = asr.process_file_simultaneous()
     print(f"Final transcription: {transcription}")
